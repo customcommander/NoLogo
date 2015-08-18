@@ -1,0 +1,26 @@
+{
+  "name": "nologo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chromedriver": "^2.16.0",
+    "crx": "^3.0.3",
+    "mocha": "^2.2.5",
+    "selenium-webdriver": "^2.46.1"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/customcommander/NoLogo.git"
+  },
+  "author": "customcommander",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/customcommander/NoLogo/issues"
+  },
+  "homepage": "https://github.com/customcommander/NoLogo#readme"
+}
