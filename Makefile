@@ -1,18 +1,40 @@
-export PATH:=node_modules/.bin:$(PATH)
+NODE_BIN_DIR = ./node_modules/.bin
+ESLINT = $(NODE_BIN_DIR)/eslint
+MOCHA = $(NODE_BIN_DIR)/mocha
+MOCHAFLAGS = -t 15000
+CRX = $(NODE_BIN_DIR)/crx
 
-NODE_BIN_DIR=./node_modules/.bin
+src_dir = src
+src_all_files = $(shell find $(src_dir) -type f)
+src_all_js = $(filter %.js,$(src_all_files))
+
+test_dir = test
+test_all_js = $(shell find $(test_dir) -name "*.js")
+
+all_js = $(src_all_js) $(test_all_js)
+
+lint_js = $(addprefix tmp/lint/,$(all_js:.js=.lint))
+
+export PATH := $(PATH):$(NODE_BIN_DIR)
+
+all: $(lint_js) NoLogo.crx tmp/test
 
 clean:
-	rm -rf NoLogo.crx
-	rm -rf NoLogo.pem
+	-rm -rfv tmp/
+	-rm NoLogo.crx
+	-rm NoLogo.pem
 
-package: clean
-	$(NODE_BIN_DIR)/crx pack src -p NoLogo.pem
+$(lint_js): tmp/lint/%.lint: %.js .eslintrc.json
+	mkdir -p $(dir $@)
+	$(ESLINT) $<
+	touch $@
 
-test: package
-	$(NODE_BIN_DIR)/mocha -t 15000 test/test.js
+NoLogo.crx: $(src_all_files)
+	$(CRX) pack $(src_dir) -p NoLogo.pem
 
-.PHONY: clean package test
+tmp/test: NoLogo.crx $(test_all_js)
+	mkdir -p $(dir $@)
+	$(MOCHA) $(MOCHAFLAGS) test/test.js
+	touch $@
 
-# echo commands off
-.SILENT:
+.PHONY: all clean
