@@ -11,10 +11,10 @@ describe('The extension', function () {
     });
 
     afterEach(function () {
-        driver.quit();
+        return driver.quit();
     });
 
-    it('should install without error',function (done) {
+    it('should install without error', function () {
 
         // Assumes we're on the page that lists all installed extensions
         function assertNoLogoIsInstalled() {
@@ -39,9 +39,8 @@ describe('The extension', function () {
                 });
         }
 
-        driver
+        return driver
             .get('chrome://extensions-frame')
-            .then(assertNoLogoIsInstalled)
-            .then(done);
+            .then(assertNoLogoIsInstalled);
     });
 });
